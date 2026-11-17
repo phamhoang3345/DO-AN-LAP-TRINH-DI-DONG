@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F7F5F0"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <!-- Tiêu đề màn hình -->
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:text="Thống kê chi tiêu"
+        android:textColor="#263B32"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <!-- Thẻ Card minh họa biểu đồ/thống kê -->
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="2dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:id="@+id/tv_monthly_total_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tổng chi tháng này"
+                android:textColor="#666666"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/tv_monthly_total_amount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="2.500.000 đ"
+                android:textColor="#C66A42"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+    <!-- Thông tin bổ sung hoặc chú thích thống kê -->
+    <TextView
+        android:id="@+id/tv_chart_note"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Biểu đồ phân tích chi tiết sẽ được cập nhật ở phiên bản tiếp theo."
+        android:textColor="#263B32"
+        android:textSize="14sp" />
+
+</LinearLayout>

@@ -1,9 +1,16 @@
 package com.example.expensemanager.model
 
+import com.google.gson.annotations.SerializedName
 
 data class Expense(
-    val id: Int,
+    @SerializedName("id")
+    val id: String? = null,
+    @SerializedName("title")
     val title: String,
+    @SerializedName("amount")
     val amount: String,
-    val date: String
+    @SerializedName("date")
+    val date: String,
+    @SerializedName("category")
+    val category: String? = null
 )
