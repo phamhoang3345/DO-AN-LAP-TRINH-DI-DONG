@@ -16,8 +16,8 @@ class ProfileViewModel : ViewModel() {
 
     fun loadUserProfile() {
         _userProfile.value = UserProfile(
-            name = "Nguyen Ngan Giang",
-            email = "giang.nguyen@example.com"
+            name = "Nguyen Ngoc Huy",
+            email = "huy.2474802015199@vanlanguni.vn"
         )
     }
 }

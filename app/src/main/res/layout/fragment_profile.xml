@@ -23,7 +23,7 @@
         android:id="@+id/tv_user_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Nguyen Ngan Giang"
+        android:text="Nguyen Ngoc Huy"
         android:textColor="#263B32"
         android:textSize="18sp"
         android:textStyle="bold" />
@@ -35,7 +35,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
         android:layout_marginBottom="24dp"
-        android:text="giang.nguyen@example.com"
+        android:text="huy.2474802015199@vanlanguni.vn"
         android:textColor="#666666"
         android:textSize="14sp" />
 
