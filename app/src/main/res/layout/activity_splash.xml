@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F7F5F0"
+    android:padding="24dp">
+
+    <!-- Phần giữa: Logo + Tên App + Tagline -->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <!-- Logo Icon -->
+        <ImageView
+            android:id="@+id/img_splash_logo"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_marginBottom="20dp"
+            android:src="@drawable/ic_expense_logo"
+            android:contentDescription="Splash Logo" />
+
+        <!-- Tên ứng dụng -->
+        <TextView
+            android:id="@+id/tv_splash_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Expense Manager"
+            android:textColor="#263B32"
+            android:textSize="30sp"
+            android:textStyle="bold" />
+
+        <!-- Tagline / Khẩu hiệu -->
+        <TextView
+            android:id="@+id/tv_splash_tagline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Quản lý tài chính cá nhân thông minh"
+            android:textColor="#666666"
+            android:textSize="15sp" />
+
+        <!-- ProgressBar nhỏ minh họa loading -->
+        <ProgressBar
+            android:id="@+id/progress_splash"
+            style="?android:attr/progressBarStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:indeterminateTint="#263B32" />
+
+    </LinearLayout>
+
+    <!-- Thông tin phiên bản ở dưới cùng -->
+    <TextView
+        android:id="@+id/tv_version"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="16dp"
+        android:text="Phiên bản 1.0.0"
+        android:textColor="#999999"
+        android:textSize="12sp" />
+
+</RelativeLayout>

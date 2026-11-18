@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <!-- Background Rounded Circle -->
+    <path
+        android:fillColor="#263B32"
+        android:pathData="M54,4 C26.386,4 4,26.386 4,54 C4,81.614 26.386,104 54,104 C81.614,104 104,81.614 104,54 C104,26.386 81.614,4 54,4 Z" />
+
+    <!-- Wallet Outer Body -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M28,34 C24.686,34 22,36.686 22,40 L22,70 C22,73.314 24.686,76 28,76 L78,76 C81.314,76 84,73.314 84,70 L84,40 C84,36.686 81.314,34 78,34 Z" />
+
+    <!-- Wallet Top Flap / Accent Line -->
+    <path
+        android:fillColor="#C66A42"
+        android:pathData="M28,30 C24.686,30 22,32.686 22,36 L78,36 C81.314,36 84,32.686 84,30 Z" />
+
+    <!-- Wallet Clasp / Button Container -->
+    <path
+        android:fillColor="#C66A42"
+        android:pathData="M66,48 C62.686,48 60,50.686 60,54 C60,57.314 62.686,60 66,60 L84,60 L84,48 Z" />
+
+    <!-- Clasp Golden Coin / Center Dot -->
+    <path
+        android:fillColor="#FFD700"
+        android:pathData="M70,54 C70,55.657 68.657,57 67,57 C65.343,57 64,55.657 64,54 C64,52.343 65.343,51 67,51 C68.657,51 70,52.343 70,54 Z" />
+
+    <!-- Growth Trend Arrow above wallet -->
+    <path
+        android:fillColor="#4CAF50"
+        android:pathData="M32,48 L44,40 L52,44 L64,32 L64,38 L68,38 L68,26 L56,26 L56,30 L61,30 L51,40 L44,36 L30,45 Z" />
+
+</vector>
