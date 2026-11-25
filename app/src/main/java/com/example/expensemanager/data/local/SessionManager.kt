@@ -18,11 +18,18 @@ class SessionManager(context: Context) {
         private const val KEY_BUDGET_LIMIT = "budget_limit"
     }
 
-    fun saveSession(isLoggedIn: Boolean, email: String, name: String = "Nguyen Ngan Giang") {
+    fun saveSession(isLoggedIn: Boolean, email: String, name: String? = null) {
+        val currentName = prefs.getString(KEY_USER_NAME, null)
+        val resolvedName = when {
+            !name.isNullOrBlank() -> name
+            !currentName.isNullOrBlank() -> currentName
+            else -> email.substringBefore("@").replaceFirstChar { it.uppercase() }
+        }
+
         prefs.edit().apply {
             putBoolean(KEY_IS_LOGGED_IN, isLoggedIn)
             putString(KEY_USER_EMAIL, email)
-            putString(KEY_USER_NAME, name)
+            putString(KEY_USER_NAME, resolvedName)
             apply()
         }
     }

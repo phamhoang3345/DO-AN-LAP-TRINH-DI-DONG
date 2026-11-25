@@ -375,7 +375,7 @@
 
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- CARD 2: BIỂU ĐỒ HÌNH VÀNH KHĂN CHI TIÊU THEO DANH MỤC -->
+        <!-- CARD 2: BIỂU ĐỒ HÌNH VÀNH KHĂN CHI TIẾU THEO DANH MỤC -->
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/card_chart_container"
             android:layout_width="match_parent"
@@ -490,42 +490,6 @@
             android:layout_marginTop="12dp"
             android:indeterminate="true"
             android:visibility="gone" />
-
-        <!-- Empty State khi không có dữ liệu -->
-        <LinearLayout
-            android:id="@+id/layout_empty"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:padding="24dp"
-            android:visibility="gone">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="📊"
-                android:textSize="48sp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:text="Chưa có dữ liệu thống kê"
-                android:textColor="#263B32"
-                android:textSize="16sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:text="Các khoản chi tiêu trong khoảng thời gian này sẽ được tổng hợp ở đây."
-                android:textAlignment="center"
-                android:textColor="#757575"
-                android:textSize="13sp" />
-        </LinearLayout>
 
     </LinearLayout>
 
