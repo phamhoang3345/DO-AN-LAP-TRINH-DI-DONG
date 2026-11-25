@@ -29,7 +29,7 @@ class ExpenseAdapter(
         holder.binding.tvTitle.text = expense.title
         val cleanAmount = if (expense.amount.endsWith("đ")) expense.amount else "${expense.amount} đ"
 
-        val isIncome = expense.title.startsWith("Thu nhập") || expense.category?.contains("Thu nhập") == true
+        val isIncome = expense.type == "INCOME" || expense.title.startsWith("Thu nhập") || (expense.category?.contains("Thu nhập") == true)
         if (isIncome) {
             val formattedIncomeAmount = if (cleanAmount.startsWith("+")) cleanAmount else "+ $cleanAmount"
             holder.binding.tvAmount.text = formattedIncomeAmount
@@ -40,8 +40,12 @@ class ExpenseAdapter(
             holder.binding.tvAmount.setTextColor(Color.parseColor("#C66A42"))
         }
 
-        val categoryStr = expense.category ?: "Khác"
-        holder.binding.tvCategoryDate.text = "$categoryStr • ${expense.date}"
+        val categoryStr = expense.category?.trim().orEmpty()
+        if (categoryStr.isNotEmpty()) {
+            holder.binding.tvCategoryDate.text = "$categoryStr • ${expense.date}"
+        } else {
+            holder.binding.tvCategoryDate.text = expense.date
+        }
 
         holder.itemView.setOnClickListener {
             onItemClick?.invoke(expense)

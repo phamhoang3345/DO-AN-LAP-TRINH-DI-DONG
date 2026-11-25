@@ -52,14 +52,15 @@
                         android:layout_marginBottom="16dp"
                         android:hint="Tên khoản chi tiêu (*)"
                         app:boxStrokeColor="#263B32"
+                        app:hintAnimationEnabled="false"
                         app:hintTextColor="#263B32">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/et_title"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:inputType="textCapSentences"
-                            android:maxLines="1"
+                            android:inputType="text"
+                            android:singleLine="true"
                             android:textColor="#263B32" />
                     </com.google.android.material.textfield.TextInputLayout>
 
@@ -72,6 +73,7 @@
                         android:layout_marginBottom="16dp"
                         android:hint="Số tiền (VNĐ) (*)"
                         app:boxStrokeColor="#263B32"
+                        app:hintAnimationEnabled="false"
                         app:hintTextColor="#263B32">
 
                         <com.google.android.material.textfield.TextInputEditText
@@ -79,7 +81,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:inputType="numberDecimal"
-                            android:maxLines="1"
+                            android:singleLine="true"
                             android:textColor="#C66A42"
                             android:textStyle="bold" />
                     </com.google.android.material.textfield.TextInputLayout>
@@ -93,15 +95,16 @@
                         android:layout_marginBottom="16dp"
                         android:hint="Ngày chi tiêu (YYYY-MM-DD) (*)"
                         app:boxStrokeColor="#263B32"
+                        app:hintAnimationEnabled="false"
                         app:hintTextColor="#263B32">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/et_date"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:focusable="false"
                             android:clickable="true"
-                            android:maxLines="1"
+                            android:focusable="false"
+                            android:singleLine="true"
                             android:textColor="#263B32" />
                     </com.google.android.material.textfield.TextInputLayout>
 
@@ -113,14 +116,15 @@
                         android:layout_height="wrap_content"
                         android:hint="Danh mục / Ghi chú"
                         app:boxStrokeColor="#263B32"
+                        app:hintAnimationEnabled="false"
                         app:hintTextColor="#263B32">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/et_category"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:inputType="textCapSentences"
-                            android:maxLines="2"
+                            android:inputType="text"
+                            android:singleLine="true"
                             android:textColor="#263B32" />
                     </com.google.android.material.textfield.TextInputLayout>
 
