@@ -1,12 +1,19 @@
-# Add project specific R8 rules here.
-# AGP will combine all keep rule files in src/main/keepRules to pass to R8
-#
-# For more details, see
-#   https://d.android.com/r/tools/r8/keep-rules
+# Proguard / R8 rules for ExpenseManager
 
-# If your project uses WebView with JS, uncomment the following
-# and specify the fully qualified class name to the JavaScript interface
-# class:
-#-keepclassmembers class fqcn.of.javascript.interface.for.webview {
-#   public *;
-#}
+# Room Database Entities & DAOs
+-keep class com.example.expensemanager.data.local.entity.** { *; }
+-keep class com.example.expensemanager.data.local.dao.** { *; }
+
+# Retrofit & Gson Models
+-keep class com.example.expensemanager.model.** { *; }
+-keepattributes *Annotation*,Signature,InnerClasses,EnclosingMethod
+
+# OkHttp & Retrofit
+-dontwarn okhttp3.**
+-dontwarn okio.**
+-dontwarn retrofit2.**
+-keep class retrofit2.** { *; }
+
+# Firebase Auth
+-keep class com.google.firebase.** { *; }
+-dontwarn com.google.firebase.**

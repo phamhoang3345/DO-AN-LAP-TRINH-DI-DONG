@@ -2,20 +2,43 @@ package com.example.expensemanager.data.local
 
 import android.content.Context
 import android.content.SharedPreferences
+import androidx.security.crypto.EncryptedSharedPreferences
+import androidx.security.crypto.MasterKey
 
 class SessionManager(context: Context) {
 
-    private val prefs: SharedPreferences =
-        context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
+    private val prefs: SharedPreferences = run {
+        var sharedPreferences: SharedPreferences? = null
+        try {
+            val masterKey = MasterKey.Builder(context, MasterKey.DEFAULT_MASTER_KEY_ALIAS)
+                .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
+                .build()
+
+            sharedPreferences = EncryptedSharedPreferences.create(
+                context,
+                PREF_NAME,
+                masterKey,
+                EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+                EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+            )
+        } catch (_: Throwable) {
+            // Fallback an toàn sang SharedPreferences chuẩn nếu thiết bị/emulator không hỗ trợ Keystore
+            try {
+                sharedPreferences = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
+            } catch (_: Throwable) {}
+        }
+        sharedPreferences ?: context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
+    }
 
     companion object {
-        private const val PREF_NAME = "expense_user_session"
+        private const val PREF_NAME = "expense_encrypted_user_session"
         private const val KEY_IS_LOGGED_IN = "is_logged_in"
         private const val KEY_USER_EMAIL = "user_email"
         private const val KEY_USER_NAME = "user_name"
         private const val KEY_USER_BALANCE = "user_balance"
         private const val KEY_TOTAL_INCOME = "total_income"
         private const val KEY_BUDGET_LIMIT = "budget_limit"
+        private const val KEY_DARK_MODE = "dark_mode"
     }
 
     fun saveSession(isLoggedIn: Boolean, email: String, name: String? = null) {
@@ -68,6 +91,14 @@ class SessionManager(context: Context) {
 
     fun saveBudgetLimit(limit: Double) {
         prefs.edit().putFloat(KEY_BUDGET_LIMIT, limit.toFloat()).apply()
+    }
+
+    fun isDarkMode(): Boolean {
+        return prefs.getBoolean(KEY_DARK_MODE, false)
+    }
+
+    fun setDarkMode(enabled: Boolean) {
+        prefs.edit().putBoolean(KEY_DARK_MODE, enabled).apply()
     }
 
     fun clearSession() {
