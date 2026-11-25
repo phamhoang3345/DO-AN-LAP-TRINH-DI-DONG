@@ -22,8 +22,8 @@ class ExpenseViewModel(application: Application) : AndroidViewModel(application)
     val expensesState: LiveData<Resource<List<Expense>>> get() = _expensesState
 
     init {
-        val expenseDao = AppDatabase.getDatabase(application).expenseDao()
-        repository = ExpenseRepository(expenseDao)
+        val db = AppDatabase.getDatabase(application)
+        repository = ExpenseRepository(db.expenseDao(), db.incomeDao())
         
         // 1. Observe Flow từ Local DB cho đúng User ID
         observeLocalExpenses()

@@ -4,16 +4,22 @@ import android.util.Log
 import com.example.expensemanager.api.ApiClient
 import com.example.expensemanager.common.Resource
 import com.example.expensemanager.data.local.dao.ExpenseDao
+import com.example.expensemanager.data.local.dao.IncomeDao
 import com.example.expensemanager.data.local.entity.ExpenseEntity
 import com.example.expensemanager.model.Expense
+import com.example.expensemanager.model.OverviewSummary
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import java.text.NumberFormat
 import java.util.Locale
 
-class ExpenseRepository(private val expenseDao: ExpenseDao) {
+class ExpenseRepository(
+    private val expenseDao: ExpenseDao,
+    private val incomeDao: IncomeDao? = null
+) {
 
     private val numberFormatter = NumberFormat.getInstance(Locale.GERMANY)
 

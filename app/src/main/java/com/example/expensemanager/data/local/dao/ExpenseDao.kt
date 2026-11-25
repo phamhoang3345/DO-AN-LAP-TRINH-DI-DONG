@@ -32,4 +32,37 @@ interface ExpenseDao {
 
     @Query("DELETE FROM expenses")
     suspend fun deleteAllExpenses()
+
+    // --- Phần Danh sách ---
+    @Query("SELECT * FROM expenses WHERE type = :type ORDER BY date DESC, id DESC")
+    fun getExpensesByType(type: String): Flow<List<ExpenseEntity>>
+
+    @Query("SELECT * FROM expenses WHERE date = :date ORDER BY id DESC")
+    fun getExpensesByDate(date: String): Flow<List<ExpenseEntity>>
+
+    @Query(
+        """
+        SELECT * FROM expenses
+        WHERE title LIKE '%' || :query || '%'
+           OR IFNULL(note, '') LIKE '%' || :query || '%'
+        ORDER BY date DESC, id DESC
+        """
+    )
+    fun searchExpenses(query: String): Flow<List<ExpenseEntity>>
+
+    @Query("DELETE FROM expenses WHERE id = :expenseId")
+    suspend fun deleteExpenseById(expenseId: Int)
+
+    // --- Phần Tổng quan ---
+    @Query("SELECT IFNULL(SUM(amount), 0.0) FROM expenses WHERE type = 'EXPENSE' OR type IS NULL OR type != 'INCOME'")
+    fun getTotalExpense(): Flow<Double>
+
+    @Query("SELECT IFNULL(SUM(amount), 0.0) FROM expenses WHERE type = 'INCOME'")
+    fun getTotalIncomeFromExpenses(): Flow<Double>
+
+    @Query("SELECT IFNULL(SUM(amount), 0.0) FROM expenses WHERE date LIKE :datePattern AND (type = 'EXPENSE' OR type IS NULL OR type != 'INCOME')")
+    fun getTotalExpenseByDatePattern(datePattern: String): Flow<Double>
+
+    @Query("SELECT * FROM expenses ORDER BY date DESC, id DESC LIMIT :limit")
+    fun getRecentExpenses(limit: Int = 5): Flow<List<ExpenseEntity>>
 }

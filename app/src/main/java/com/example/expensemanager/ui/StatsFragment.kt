@@ -95,7 +95,7 @@ class StatsFragment : Fragment() {
 
             binding.tvChartTotalAmount.text = summary.formattedChartTotal
 
-            // Cập nhật Biểu đồ Donut Chart (Biểu đồ tròn) - Luôn hiển thị
+            // Cập nhật Biểu đồ Donut Chart (Biểu đồ tròn)
             val donutSlices = if (summary.categoryStats.isNotEmpty()) {
                 summary.categoryStats.map { cat ->
                     DonutSliceData(
@@ -112,7 +112,7 @@ class StatsFragment : Fragment() {
             // Tạo các Chú thích Màu sắc (Legend Chips)
             binding.chipGroupLegend.removeAllViews()
             for (cat in summary.categoryStats) {
-                val chip = Chip(requireContext()).applies {
+                val chip = Chip(requireContext()).apply {
                     text = cat.categoryName
                     chipIcon = ContextCompat.getDrawable(requireContext(), R.drawable.shape_circle)
                     chipIconTint = ColorStateList.valueOf(cat.color)
@@ -129,7 +129,6 @@ class StatsFragment : Fragment() {
             // Cập nhật danh sách chi tiết
             categoryStatAdapter.submitList(summary.categoryStats)
 
-            // Luôn hiển thị Card Biểu đồ Tròn
             binding.cardChartContainer.visibility = View.VISIBLE
         }
 

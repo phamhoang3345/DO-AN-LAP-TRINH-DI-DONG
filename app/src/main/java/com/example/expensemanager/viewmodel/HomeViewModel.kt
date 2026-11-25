@@ -8,6 +8,8 @@ import androidx.lifecycle.viewModelScope
 import com.example.expensemanager.common.Resource
 import com.example.expensemanager.data.local.AppDatabase
 import com.example.expensemanager.data.local.SessionManager
+import com.example.expensemanager.model.OverviewSummary
+import com.example.expensemanager.repository.ExpenseRepository
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.text.NumberFormat
@@ -16,10 +18,14 @@ import java.util.Locale
 class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
     private val sessionManager = SessionManager(application)
-    private val expenseDao = AppDatabase.getDatabase(application).expenseDao()
+    private val db = AppDatabase.getDatabase(application)
+    private val repository = ExpenseRepository(db.expenseDao(), db.incomeDao())
 
     private val _greeting = MutableLiveData<String>()
     val greeting: LiveData<String> get() = _greeting
+
+    private val _overviewSummary = MutableLiveData<OverviewSummary>()
+    val overviewSummary: LiveData<OverviewSummary> get() = _overviewSummary
 
     private val _currentBalance = MutableLiveData<String>()
     val currentBalance: LiveData<String> get() = _currentBalance
@@ -52,7 +58,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
     init {
         loadHomeData()
-        observeExpensesFromRoom()
+        observeOverviewFromRoom()
     }
 
     fun loadHomeData() {
@@ -62,7 +68,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         updateBudgetCalculation()
     }
 
-    private fun observeExpensesFromRoom() {
+    private fun observeOverviewFromRoom() {
         viewModelScope.launch {
             val currentUserId = sessionManager.getUserId()
             expenseDao.getExpensesForUser(currentUserId).collectLatest { allItems ->

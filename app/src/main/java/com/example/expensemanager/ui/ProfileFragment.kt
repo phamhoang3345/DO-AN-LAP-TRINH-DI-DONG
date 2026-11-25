@@ -21,7 +21,8 @@ import com.google.firebase.auth.FirebaseAuth
 class ProfileFragment : Fragment() {
 
     private val viewModel: ProfileViewModel by viewModels()
-    private lateinit var sessionManager: SessionManager
+    private var sessionManager: SessionManager? = null
+    private var clearDialog: AlertDialog? = null
 
     private var _binding: FragmentProfileBinding? = null
     private val binding get() = _binding!!
@@ -38,11 +39,15 @@ class ProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        sessionManager = SessionManager(requireContext())
+        val session = SessionManager(requireContext().applicationContext)
+        sessionManager = session
 
         // Hiển thị thông tin người dùng từ phiên đăng nhập
-        binding.tvUserName.text = sessionManager.getUserName()
-        binding.tvUserEmail.text = sessionManager.getUserEmail()
+        binding.tvUserName.text = session.getUserName()
+        binding.tvUserEmail.text = session.getUserEmail()
+
+        // Tải ảnh avatar bất đồng bộ bằng Glide
+        ImageLoader.loadAvatar(binding.imgAvatar, url = null)
 
         // Nút Chỉnh sửa hồ sơ
         binding.tvOptionSettings.setOnClickListener {
@@ -77,6 +82,8 @@ class ProfileFragment : Fragment() {
 
     private fun showEditProfileDialog() {
         val context = requireContext()
+        val session = sessionManager ?: return
+
         val layout = LinearLayout(context).apply {
             orientation = LinearLayout.VERTICAL
             setPadding(48, 32, 48, 16)
@@ -84,13 +91,13 @@ class ProfileFragment : Fragment() {
 
         val etName = EditText(context).apply {
             hint = "Họ và tên"
-            setText(sessionManager.getUserName())
+            setText(session.getUserName())
             inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_WORDS
         }
 
         val etEmail = EditText(context).apply {
             hint = "Email"
-            setText(sessionManager.getUserEmail())
+            setText(session.getUserEmail())
             inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS
         }
 
@@ -104,7 +111,7 @@ class ProfileFragment : Fragment() {
                 val name = etName.text.toString().trim()
                 val email = etEmail.text.toString().trim()
                 if (name.isNotEmpty() && email.isNotEmpty()) {
-                    sessionManager.saveSession(true, email, name)
+                    session.saveSession(true, email, name)
                     binding.tvUserName.text = name
                     binding.tvUserEmail.text = email
                     Toast.makeText(context, "Đã cập nhật hồ sơ thành công!", Toast.LENGTH_SHORT).show()
@@ -190,14 +197,18 @@ class ProfileFragment : Fragment() {
     }
 
     private fun showClearDataConfirmDialog() {
-        AlertDialog.Builder(requireContext())
+        clearDialog?.dismiss()
+        clearDialog = AlertDialog.Builder(requireContext())
             .setTitle("⚠️ Cảnh báo xóa dữ liệu")
-            .setMessage("Bạn có chắc chắn muốn xóa TOÀN BỘ khoản chi tiêu, thu nhập và reset lại số dư tài khoản về 0 không?\n\nHành động này không thể hoàn tác!")
+            .setMessage(
+                "Bạn có chắc chắn muốn xóa TOÀN BỘ khoản chi tiêu, thu nhập và reset lại số dư tài khoản về 0 không?\n\nHành động này không thể hoàn tác!"
+            )
             .setPositiveButton("XÓA TẤT CẢ") { _, _ ->
                 viewModel.clearAllData()
             }
             .setNegativeButton("Hủy", null)
-            .show()
+            .create()
+        clearDialog?.show()
     }
 
     private fun observeViewModel() {
@@ -207,6 +218,10 @@ class ProfileFragment : Fragment() {
     }
 
     override fun onDestroyView() {
+        clearDialog?.dismiss()
+        clearDialog = null
+        // Giải phóng Glide & ViewBinding tránh giữ tham chiếu View sau khi hủy Fragment
+        ImageLoader.clear(binding.imgAvatar)
         super.onDestroyView()
         _binding = null
     }

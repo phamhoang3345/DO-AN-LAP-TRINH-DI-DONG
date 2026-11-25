@@ -21,4 +21,21 @@ interface IncomeDao {
 
     @Query("DELETE FROM incomes")
     suspend fun deleteAllIncomes()
+
+    // --- Phần Tổng quan & Danh sách ---
+    @Query("SELECT IFNULL(SUM(amount), 0.0) FROM incomes")
+    fun getTotalIncome(): Flow<Double>
+
+    @Query("SELECT IFNULL(SUM(amount), 0.0) FROM incomes WHERE date LIKE :datePattern")
+    fun getTotalIncomeByDatePattern(datePattern: String): Flow<Double>
+
+    @Query(
+        """
+        SELECT * FROM incomes
+        WHERE source LIKE '%' || :query || '%'
+           OR IFNULL(note, '') LIKE '%' || :query || '%'
+        ORDER BY date DESC, id DESC
+        """
+    )
+    fun searchIncomes(query: String): Flow<List<IncomeEntity>>
 }

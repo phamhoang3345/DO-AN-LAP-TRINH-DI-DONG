@@ -72,6 +72,12 @@ dependencies {
     implementation(libs.room.ktx)
     "kapt"(libs.room.compiler)
 
+    // Glide - Tải ảnh bất đồng bộ & Caching
+    implementation("com.github.bumptech.glide:glide:4.16.0")
+
+    // LeakCanary - Kiểm tra rò rỉ bộ nhớ (chỉ chạy ở bản debug)
+    debugImplementation("com.squareup.leakcanary:leakcanary-android:2.14")
+
     // Firebase BoM & Auth
     implementation(platform("com.google.firebase:firebase-bom:33.8.0"))
     implementation("com.google.firebase:firebase-auth")
