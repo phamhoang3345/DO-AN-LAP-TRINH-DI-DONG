@@ -10,5 +10,6 @@ data class ExpenseEntity(
     val title: String,
     val amount: Double,
     val date: String,
-    val note: String? = null
+    val note: String? = null,
+    val type: String = "EXPENSE"
 )

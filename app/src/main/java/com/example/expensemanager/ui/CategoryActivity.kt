@@ -1,8 +1,8 @@
 package com.example.expensemanager.ui
 
-import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.text.InputType
 import android.view.View
 import android.widget.EditText
 import android.widget.LinearLayout
@@ -14,7 +14,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.expensemanager.adapter.CategoryAdapter
 import com.example.expensemanager.common.Resource
-import com.example.expensemanager.data.local.entity.CategoryEntity
 import com.example.expensemanager.databinding.ActivityCategoryBinding
 import com.example.expensemanager.viewmodel.CategoryViewModel
 import kotlinx.coroutines.flow.collectLatest
@@ -112,9 +111,11 @@ class CategoryActivity : AppCompatActivity() {
 
         val etIcon = EditText(this).apply {
             hint = "Biểu tượng Emoji (Ví dụ: ☕, 🎮)"
+            inputType = InputType.TYPE_CLASS_TEXT
         }
         val etName = EditText(this).apply {
             hint = "Tên danh mục (*)"
+            inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_SENTENCES
         }
 
         layout.addView(etIcon)

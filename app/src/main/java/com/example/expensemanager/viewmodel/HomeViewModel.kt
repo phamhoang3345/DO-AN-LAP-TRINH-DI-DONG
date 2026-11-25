@@ -66,7 +66,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch {
             expenseDao.getAllExpenses().collectLatest { allItems ->
                 val (incomeItems, expenseItems) = allItems.partition { item ->
-                    item.title.startsWith("Thu nhập") || item.note?.contains("Thu nhập") == true
+                    item.type == "INCOME" || item.title.startsWith("Thu nhập") || (item.note?.contains("Thu nhập") == true)
                 }
 
                 // 1. Tính tổng chi tiêu

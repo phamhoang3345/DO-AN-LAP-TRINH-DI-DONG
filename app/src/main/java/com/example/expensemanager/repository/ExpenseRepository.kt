@@ -32,7 +32,8 @@ class ExpenseRepository(private val expenseDao: ExpenseDao) {
                     title = entity.title,
                     amount = "$formattedAmount đ",
                     date = entity.date,
-                    category = entity.note
+                    category = entity.note?.ifBlank { null },
+                    type = entity.type
                 )
             }
             Resource.Success(expenses)
@@ -66,7 +67,8 @@ class ExpenseRepository(private val expenseDao: ExpenseDao) {
                             title = expense.title,
                             amount = expense.amount.toDoubleOrNull() ?: 0.0,
                             date = expense.date,
-                            note = expense.category
+                            note = expense.category,
+                            type = expense.type
                         )
                         expenseDao.insertExpense(entity)
                     }

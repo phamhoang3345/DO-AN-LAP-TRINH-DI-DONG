@@ -37,24 +37,28 @@ class AddIncomeViewModel(application: Application) : AndroidViewModel(applicatio
             return
         }
 
+        val cleanSource = source.trim()
+        val categoryOrNote = if (!note.isNullOrBlank()) note.trim() else cleanSource
+
         _saveResult.value = Resource.Loading
         viewModelScope.launch {
             try {
                 // 1. Lưu khoản thu vào Room DB Bảng Incomes
                 val newIncome = IncomeEntity(
                     amount = amount,
-                    source = source.trim(),
+                    source = cleanSource,
                     date = date.trim(),
-                    note = note?.trim()
+                    note = note?.trim()?.ifEmpty { null }
                 )
                 incomeDao.insertIncome(newIncome)
 
-                // 2. Tự động lưu vào Bảng Expenses để hiển thị bên tab Chi tiêu (Không còn tiền tố "Thu nhập:" ở tiêu đề)
+                // 2. Tự động lưu vào Bảng Expenses với type = INCOME (Nếu ghi chú trống thì lấy Tên nguồn thu làm danh mục)
                 val incomeExpenseEntity = ExpenseEntity(
-                    title = source.trim(),
+                    title = cleanSource,
                     amount = amount,
                     date = date.trim(),
-                    note = if (!note.isNullOrBlank()) "Thu nhập (${note.trim()})" else "Thu nhập"
+                    note = categoryOrNote,
+                    type = "INCOME"
                 )
                 expenseDao.insertExpense(incomeExpenseEntity)
 
