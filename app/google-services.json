@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "864347802406",
+    "project_id": "quanlychitieu-6e608",
+    "storage_bucket": "quanlychitieu-6e608.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:864347802406:android:e5e6c4dad40b7410b28fe7",
+        "android_client_info": {
+          "package_name": "com.example.expensemanager"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD2kBDGdXzqnqKlAggqspu7FXlkAkle-54"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:864347802406:android:47bd57b5bbea894bb28fe7",
+        "android_client_info": {
+          "package_name": "com.nhom5.FinTrack"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD2kBDGdXzqnqKlAggqspu7FXlkAkle-54"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

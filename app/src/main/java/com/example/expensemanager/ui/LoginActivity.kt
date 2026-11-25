@@ -10,6 +10,7 @@ import com.example.expensemanager.common.Resource
 import com.example.expensemanager.data.local.SessionManager
 import com.example.expensemanager.databinding.ActivityLoginBinding
 import com.example.expensemanager.viewmodel.LoginViewModel
+import com.google.firebase.auth.FirebaseAuth
 
 class LoginActivity : AppCompatActivity() {
 
@@ -35,8 +36,10 @@ class LoginActivity : AppCompatActivity() {
             viewModel.login(email, password)
         }
 
+        // Mở màn hình Đăng ký tài khoản (RegisterActivity)
         binding.tvRegister.setOnClickListener {
-            Toast.makeText(this, "Tính năng đăng ký đang được phát triển!", Toast.LENGTH_SHORT).show()
+            val intent = Intent(this, RegisterActivity::class.java)
+            startActivity(intent)
         }
     }
 
@@ -53,7 +56,9 @@ class LoginActivity : AppCompatActivity() {
                     Toast.makeText(this, "Đăng nhập thành công!", Toast.LENGTH_SHORT).show()
 
                     val email = binding.etEmail.text?.toString()?.trim().orEmpty()
-                    sessionManager.saveSession(isLoggedIn = true, email = email.ifEmpty { "giang.nguyen@example.com" })
+                    val user = FirebaseAuth.getInstance().currentUser
+                    val name = user?.displayName ?: email.substringBefore("@")
+                    sessionManager.saveSession(isLoggedIn = true, email = email.ifEmpty { "giang.nguyen@example.com" }, name = name)
 
                     // Chuyển sang MainActivity
                     val intent = Intent(this, MainActivity::class.java)

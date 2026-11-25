@@ -93,15 +93,19 @@ class StatsFragment : Fragment() {
             binding.tvNetBalance.text = summary.formattedNetBalance
             binding.tvAvgDaily.text = summary.formattedAvgDailyExpense
 
-            binding.tvChartTotalAmount.text = summary.formattedExpense.replace("- ", "")
+            binding.tvChartTotalAmount.text = summary.formattedChartTotal
 
             // Cập nhật Biểu đồ Donut Chart (Biểu đồ tròn)
-            val donutSlices = summary.categoryStats.map { cat ->
-                DonutSliceData(
-                    categoryName = cat.categoryName,
-                    value = cat.totalAmount.toFloat(),
-                    color = cat.color
-                )
+            val donutSlices = if (summary.categoryStats.isNotEmpty()) {
+                summary.categoryStats.map { cat ->
+                    DonutSliceData(
+                        categoryName = cat.categoryName,
+                        value = cat.totalAmount.toFloat(),
+                        color = cat.color
+                    )
+                }
+            } else {
+                listOf(DonutSliceData("Chưa có chi tiêu", 1f, Color.parseColor("#E0E0E0")))
             }
             binding.donutChartView.setData(donutSlices)
 
@@ -125,13 +129,7 @@ class StatsFragment : Fragment() {
             // Cập nhật danh sách chi tiết
             categoryStatAdapter.submitList(summary.categoryStats)
 
-            if (summary.categoryStats.isEmpty()) {
-                binding.layoutEmpty.visibility = View.VISIBLE
-                binding.cardChartContainer.visibility = View.GONE
-            } else {
-                binding.layoutEmpty.visibility = View.GONE
-                binding.cardChartContainer.visibility = View.VISIBLE
-            }
+            binding.cardChartContainer.visibility = View.VISIBLE
         }
 
         viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
@@ -143,4 +141,8 @@ class StatsFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
+}
+
+private inline fun Chip.applies(block: Chip.() -> Unit): Chip {
+    return this.apply(block)
 }

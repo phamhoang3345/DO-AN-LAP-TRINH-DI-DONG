@@ -526,7 +526,6 @@
                 android:textColor="#757575"
                 android:textSize="13sp" />
         </LinearLayout>
-
     </LinearLayout>
 
 </androidx.core.widget.NestedScrollView>
