@@ -12,6 +12,9 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface ExpenseDao {
     
+    @Query("SELECT * FROM expenses WHERE userId = :userId ORDER BY id DESC")
+    fun getExpensesForUser(userId: String): Flow<List<ExpenseEntity>>
+
     @Query("SELECT * FROM expenses ORDER BY id DESC")
     fun getAllExpenses(): Flow<List<ExpenseEntity>>
 

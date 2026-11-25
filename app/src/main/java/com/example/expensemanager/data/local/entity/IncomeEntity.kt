@@ -10,5 +10,6 @@ data class IncomeEntity(
     val amount: Double,
     val source: String,
     val date: String,
-    val note: String? = null
+    val note: String? = null,
+    val userId: String = ""
 )

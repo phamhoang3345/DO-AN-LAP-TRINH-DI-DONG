@@ -64,7 +64,8 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
     private fun observeExpensesFromRoom() {
         viewModelScope.launch {
-            expenseDao.getAllExpenses().collectLatest { allItems ->
+            val currentUserId = sessionManager.getUserId()
+            expenseDao.getExpensesForUser(currentUserId).collectLatest { allItems ->
                 val (incomeItems, expenseItems) = allItems.partition { item ->
                     item.type == "INCOME" || item.title.startsWith("Thu nhập") || (item.note?.contains("Thu nhập") == true)
                 }

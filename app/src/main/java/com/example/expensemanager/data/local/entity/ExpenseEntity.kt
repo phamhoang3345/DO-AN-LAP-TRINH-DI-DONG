@@ -11,5 +11,6 @@ data class ExpenseEntity(
     val amount: Double,
     val date: String,
     val note: String? = null,
-    val type: String = "EXPENSE"
+    val type: String = "EXPENSE",
+    val userId: String = ""
 )

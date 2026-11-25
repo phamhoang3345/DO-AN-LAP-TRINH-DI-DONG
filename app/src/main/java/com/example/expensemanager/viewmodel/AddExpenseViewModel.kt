@@ -7,21 +7,23 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.expensemanager.common.Resource
 import com.example.expensemanager.data.local.AppDatabase
+import com.example.expensemanager.data.local.SessionManager
 import com.example.expensemanager.data.local.entity.ExpenseEntity
 import com.example.expensemanager.repository.ExpenseRepository
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import java.text.NumberFormat
+import java.util.Locale
 
 class AddExpenseViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val repository: ExpenseRepository
+    private val db = AppDatabase.getDatabase(application)
+    private val expenseDao = db.expenseDao()
+    private val repository = ExpenseRepository(expenseDao)
+    private val sessionManager = SessionManager(application)
 
     private val _saveResult = MutableLiveData<Resource<String>>()
     val saveResult: LiveData<Resource<String>> get() = _saveResult
-
-    init {
-        val expenseDao = AppDatabase.getDatabase(application).expenseDao()
-        repository = ExpenseRepository(expenseDao)
-    }
 
     fun saveExpense(id: Int?, title: String, amountStr: String, date: String, category: String?) {
         if (title.isBlank()) {
@@ -39,10 +41,36 @@ class AddExpenseViewModel(application: Application) : AndroidViewModel(applicati
         }
 
         val cleanNote = category?.trim()?.ifEmpty { null }
+        val currentUserId = sessionManager.getUserId()
 
         _saveResult.value = Resource.Loading
         viewModelScope.launch {
             try {
+                // Kiểm tra số dư khả dụng trước khi cho phép chi tiêu
+                val userItems = expenseDao.getExpensesForUser(currentUserId).first()
+                val (incomeItems, expenseItems) = userItems.partition { item ->
+                    item.type == "INCOME" || item.title.startsWith("Thu nhập") || (item.note?.contains("Thu nhập") == true)
+                }
+
+                val totalIncomeSum = incomeItems.sumOf { it.amount }
+                val currentTotalExpense = expenseItems.sumOf { it.amount }
+
+                // Nếu đang chỉnh sửa khoản chi cũ thì cộng trừ chênh lệch khoản chi đó
+                val existingExpenseAmount = if (id != null && id != 0) {
+                    expenseItems.find { it.id == id }?.amount ?: 0.0
+                } else 0.0
+
+                val availableBalance = totalIncomeSum - (currentTotalExpense - existingExpenseAmount)
+
+                if (amount > availableBalance) {
+                    val formatter = NumberFormat.getInstance(Locale.GERMANY)
+                    val formattedAmount = "${formatter.format(amount.toLong())} đ"
+                    val formattedAvailable = "${formatter.format(availableBalance.toLong().coerceAtLeast(0))} đ"
+
+                    _saveResult.value = Resource.Error("Số tiền chi tiêu ($formattedAmount) vượt quá số dư hiện có ($formattedAvailable)!")
+                    return@launch
+                }
+
                 if (id == null || id == 0) {
                     // Thêm mới
                     val newExpense = ExpenseEntity(
@@ -50,7 +78,8 @@ class AddExpenseViewModel(application: Application) : AndroidViewModel(applicati
                         amount = amount,
                         date = date,
                         note = cleanNote,
-                        type = "EXPENSE"
+                        type = "EXPENSE",
+                        userId = currentUserId
                     )
                     repository.addExpense(newExpense)
                     _saveResult.value = Resource.Success("Thêm khoản chi tiêu thành công!")
@@ -62,7 +91,8 @@ class AddExpenseViewModel(application: Application) : AndroidViewModel(applicati
                         amount = amount,
                         date = date,
                         note = cleanNote,
-                        type = "EXPENSE"
+                        type = "EXPENSE",
+                        userId = currentUserId
                     )
                     repository.updateExpense(updatedExpense)
                     _saveResult.value = Resource.Success("Cập nhật khoản chi tiêu thành công!")
@@ -74,6 +104,7 @@ class AddExpenseViewModel(application: Application) : AndroidViewModel(applicati
     }
 
     fun deleteExpense(id: Int, title: String, amount: Double, date: String, category: String?) {
+        val currentUserId = sessionManager.getUserId()
         _saveResult.value = Resource.Loading
         viewModelScope.launch {
             try {
@@ -83,7 +114,8 @@ class AddExpenseViewModel(application: Application) : AndroidViewModel(applicati
                     amount = amount,
                     date = date,
                     note = category?.trim()?.ifEmpty { null },
-                    type = "EXPENSE"
+                    type = "EXPENSE",
+                    userId = currentUserId
                 )
                 repository.deleteExpense(expenseToDelete)
                 _saveResult.value = Resource.Success("Đã xóa khoản chi tiêu!")

@@ -12,7 +12,6 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import com.example.expensemanager.common.Resource
 import com.example.expensemanager.data.local.SessionManager
 import com.example.expensemanager.databinding.FragmentProfileBinding
 import com.example.expensemanager.viewmodel.ProfileViewModel
@@ -60,9 +59,13 @@ class ProfileFragment : Fragment() {
             showClearDataConfirmDialog()
         }
 
-        // Nút đăng xuất -> Xóa phiên và về LoginActivity
+        // Nút đăng xuất -> Đăng xuất Firebase & Xóa phiên đăng nhập (Giữ nguyên dữ liệu CSDL)
         binding.tvOptionLogout.setOnClickListener {
+            try {
+                FirebaseAuth.getInstance().signOut()
+            } catch (_: Exception) {}
             sessionManager.clearSession()
+
             Toast.makeText(requireContext(), "Đã đăng xuất!", Toast.LENGTH_SHORT).show()
             val intent = Intent(requireContext(), LoginActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
@@ -198,16 +201,8 @@ class ProfileFragment : Fragment() {
     }
 
     private fun observeViewModel() {
-        viewModel.clearDataResult.observe(viewLifecycleOwner) { resource ->
-            when (resource) {
-                is Resource.Success -> {
-                    Toast.makeText(requireContext(), resource.data, Toast.LENGTH_LONG).show()
-                }
-                is Resource.Error -> {
-                    Toast.makeText(requireContext(), resource.message, Toast.LENGTH_LONG).show()
-                }
-                else -> {}
-            }
+        viewModel.clearDataResult.observe(viewLifecycleOwner) { _ ->
+            // Clear result observed
         }
     }
 

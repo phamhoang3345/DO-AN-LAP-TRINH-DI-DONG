@@ -39,6 +39,7 @@ class AddIncomeViewModel(application: Application) : AndroidViewModel(applicatio
 
         val cleanSource = source.trim()
         val categoryOrNote = if (!note.isNullOrBlank()) note.trim() else cleanSource
+        val currentUserId = sessionManager.getUserId()
 
         _saveResult.value = Resource.Loading
         viewModelScope.launch {
@@ -48,17 +49,19 @@ class AddIncomeViewModel(application: Application) : AndroidViewModel(applicatio
                     amount = amount,
                     source = cleanSource,
                     date = date.trim(),
-                    note = note?.trim()?.ifEmpty { null }
+                    note = note?.trim()?.ifEmpty { null },
+                    userId = currentUserId
                 )
                 incomeDao.insertIncome(newIncome)
 
-                // 2. Tự động lưu vào Bảng Expenses với type = INCOME (Nếu ghi chú trống thì lấy Tên nguồn thu làm danh mục)
+                // 2. Tự động lưu vào Bảng Expenses với type = INCOME
                 val incomeExpenseEntity = ExpenseEntity(
                     title = cleanSource,
                     amount = amount,
                     date = date.trim(),
                     note = categoryOrNote,
-                    type = "INCOME"
+                    type = "INCOME",
+                    userId = currentUserId
                 )
                 expenseDao.insertExpense(incomeExpenseEntity)
 

@@ -4,6 +4,8 @@ import android.content.Context
 import android.content.SharedPreferences
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
+import com.google.firebase.auth.FirebaseAuth
+import java.util.Locale
 
 class SessionManager(context: Context) {
 
@@ -22,7 +24,6 @@ class SessionManager(context: Context) {
                 EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
             )
         } catch (_: Throwable) {
-            // Fallback an toàn sang SharedPreferences chuẩn nếu thiết bị/emulator không hỗ trợ Keystore
             try {
                 sharedPreferences = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
             } catch (_: Throwable) {}
@@ -35,26 +36,52 @@ class SessionManager(context: Context) {
         private const val KEY_IS_LOGGED_IN = "is_logged_in"
         private const val KEY_USER_EMAIL = "user_email"
         private const val KEY_USER_NAME = "user_name"
+        private const val KEY_USER_ID = "user_id"
         private const val KEY_USER_BALANCE = "user_balance"
         private const val KEY_TOTAL_INCOME = "total_income"
         private const val KEY_BUDGET_LIMIT = "budget_limit"
         private const val KEY_DARK_MODE = "dark_mode"
     }
 
-    fun saveSession(isLoggedIn: Boolean, email: String, name: String? = null) {
-        val currentName = prefs.getString(KEY_USER_NAME, null)
+    fun saveSession(isLoggedIn: Boolean, email: String, name: String? = null, userId: String? = null) {
+        val cleanEmail = email.trim().lowercase(Locale.ROOT)
+        val firebaseUser = FirebaseAuth.getInstance().currentUser
+
+        val resolvedUid = when {
+            !userId.isNullOrBlank() -> userId
+            firebaseUser != null && firebaseUser.email?.equals(cleanEmail, ignoreCase = true) == true -> firebaseUser.uid
+            else -> cleanEmail
+        }
+
         val resolvedName = when {
             !name.isNullOrBlank() -> name
-            !currentName.isNullOrBlank() -> currentName
-            else -> email.substringBefore("@").replaceFirstChar { it.uppercase() }
+            firebaseUser?.displayName?.isNotBlank() == true -> firebaseUser.displayName!!
+            else -> cleanEmail.substringBefore("@").replaceFirstChar { it.uppercase() }
         }
 
         prefs.edit().apply {
             putBoolean(KEY_IS_LOGGED_IN, isLoggedIn)
-            putString(KEY_USER_EMAIL, email)
+            putString(KEY_USER_EMAIL, cleanEmail)
             putString(KEY_USER_NAME, resolvedName)
+            putString(KEY_USER_ID, resolvedUid)
             apply()
         }
+    }
+
+    fun getUserId(): String {
+        val uid = prefs.getString(KEY_USER_ID, null)
+        if (!uid.isNullOrBlank()) return uid
+
+        val firebaseUid = FirebaseAuth.getInstance().currentUser?.uid
+        if (!firebaseUid.isNullOrBlank()) {
+            prefs.edit().putString(KEY_USER_ID, firebaseUid).apply()
+            return firebaseUid
+        }
+
+        val email = getUserEmail()
+        if (email.isNotBlank()) return email
+
+        return "guest"
     }
 
     fun isLoggedIn(): Boolean {
@@ -102,6 +129,6 @@ class SessionManager(context: Context) {
     }
 
     fun clearSession() {
-        prefs.edit().putBoolean(KEY_IS_LOGGED_IN, false).apply()
+        prefs.edit().clear().apply()
     }
 }
