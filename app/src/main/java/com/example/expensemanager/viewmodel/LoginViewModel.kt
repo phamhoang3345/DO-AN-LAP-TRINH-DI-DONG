@@ -9,68 +9,73 @@ import com.example.expensemanager.common.Resource
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
+import java.util.Locale
 
 class LoginViewModel : ViewModel() {
 
-    private val auth: FirebaseAuth = FirebaseAuth.getInstance()
+    private val auth: FirebaseAuth by lazy { FirebaseAuth.getInstance() }
 
     private val _loginState = MutableLiveData<Resource<Boolean>>()
     val loginState: LiveData<Resource<Boolean>> get() = _loginState
 
     fun login(email: String, password: String) {
-        if (email.isBlank()) {
+        val cleanEmail = email.lowercase(Locale.ROOT).trim()
+        val cleanPassword = password.trim()
+
+        if (cleanEmail.isBlank()) {
             _loginState.value = Resource.Error("Vui lòng nhập Email!")
             return
         }
-        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+        if (!Patterns.EMAIL_ADDRESS.matcher(cleanEmail).matches()) {
             _loginState.value = Resource.Error("Email không đúng định dạng!")
             return
         }
-        if (password.isBlank()) {
+        if (cleanPassword.isBlank()) {
             _loginState.value = Resource.Error("Vui lòng nhập Mật khẩu!")
-            return
-        }
-        if (password.length < 6) {
-            _loginState.value = Resource.Error("Mật khẩu phải có ít nhất 6 ký tự!")
             return
         }
 
         _loginState.value = Resource.Loading
         viewModelScope.launch {
             try {
-                auth.signInWithEmailAndPassword(email, password).await()
+                auth.signInWithEmailAndPassword(cleanEmail, cleanPassword).await()
                 _loginState.value = Resource.Success(true)
             } catch (e: Exception) {
-                _loginState.value = Resource.Error("Đăng nhập thất bại: ${e.localizedMessage}")
+                val errorDetails = e.localizedMessage ?: e.message ?: "Lỗi kết nối Firebase"
+                _loginState.value = Resource.Error("Đăng nhập thất bại: $errorDetails")
             }
         }
     }
 
     fun signUp(email: String, password: String) {
-        if (email.isBlank()) {
+        val cleanEmail = email.lowercase(Locale.ROOT).trim()
+        val cleanPassword = password.trim()
+
+        if (cleanEmail.isBlank()) {
             _loginState.value = Resource.Error("Vui lòng nhập Email để đăng ký!")
             return
         }
-        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+        if (!Patterns.EMAIL_ADDRESS.matcher(cleanEmail).matches()) {
             _loginState.value = Resource.Error("Email không đúng định dạng!")
             return
         }
-        if (password.isBlank()) {
+        if (cleanPassword.isBlank()) {
             _loginState.value = Resource.Error("Vui lòng nhập Mật khẩu!")
             return
         }
-        if (password.length < 6) {
-            _loginState.value = Resource.Error("Mật khẩu phải có ít nhất 6 ký tự!")
+        if (cleanPassword.length < 8) {
+            _loginState.value = Resource.Error("Mật khẩu phải có ít nhất 8 ký tự!")
             return
         }
 
         _loginState.value = Resource.Loading
         viewModelScope.launch {
             try {
-                auth.createUserWithEmailAndPassword(email, password).await()
+                auth.createUserWithEmailAndPassword(cleanEmail, cleanPassword).await()
                 _loginState.value = Resource.Success(true)
             } catch (e: Exception) {
-                _loginState.value = Resource.Error("Đăng ký thất bại: ${e.localizedMessage}")
+                val errorDetails = e.localizedMessage ?: e.message ?: "Lỗi kết nối Firebase"
+                _loginState.value = Resource.Error("Đăng ký thất bại: $errorDetails")
             }
         }
     }

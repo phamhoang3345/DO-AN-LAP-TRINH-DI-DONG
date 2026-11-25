@@ -13,7 +13,7 @@ import kotlinx.coroutines.tasks.await
 
 class RegisterViewModel : ViewModel() {
 
-    private val auth: FirebaseAuth = FirebaseAuth.getInstance()
+    private val auth: FirebaseAuth by lazy { FirebaseAuth.getInstance() }
 
     private val _registerState = MutableLiveData<Resource<String>>()
     val registerState: LiveData<Resource<String>> get() = _registerState
