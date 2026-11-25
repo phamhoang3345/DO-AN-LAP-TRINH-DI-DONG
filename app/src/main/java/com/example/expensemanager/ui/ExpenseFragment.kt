@@ -80,6 +80,7 @@ class ExpenseFragment : Fragment() {
     }
 
     override fun onDestroyView() {
+        _binding?.recyclerExpenses?.adapter = null
         super.onDestroyView()
         _binding = null
     }

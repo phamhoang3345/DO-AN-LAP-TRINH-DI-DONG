@@ -4,18 +4,42 @@ import android.util.Log
 import com.example.expensemanager.api.ApiClient
 import com.example.expensemanager.common.Resource
 import com.example.expensemanager.data.local.dao.ExpenseDao
+import com.example.expensemanager.data.local.dao.IncomeDao
 import com.example.expensemanager.data.local.entity.ExpenseEntity
 import com.example.expensemanager.model.Expense
+import com.example.expensemanager.model.OverviewSummary
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import java.text.NumberFormat
 import java.util.Locale
 
-class ExpenseRepository(private val expenseDao: ExpenseDao) {
+class ExpenseRepository(
+    private val expenseDao: ExpenseDao,
+    private val incomeDao: IncomeDao? = null
+) {
 
     private val numberFormatter = NumberFormat.getInstance(Locale.GERMANY)
+
+    // Lấy luồng số liệu Tổng quan (Tổng Thu, Tổng Chi, Số Dư)
+    fun getOverviewSummaryFlow(): Flow<OverviewSummary> {
+        val incomeFlow: Flow<Double> = if (incomeDao != null) {
+            combine(incomeDao.getTotalIncome(), expenseDao.getTotalIncomeFromExpenses()) { inc1, inc2 ->
+                maxOf(inc1, inc2)
+            }
+        } else {
+            expenseDao.getTotalIncomeFromExpenses()
+        }
+
+        return combine(incomeFlow, expenseDao.getTotalExpense()) { income, expense ->
+            OverviewSummary(
+                totalIncome = income,
+                totalExpense = expense
+            )
+        }
+    }
 
     // Lấy dữ liệu dạng Flow từ Local DB (Room) để ViewModel observe
     fun getExpensesFlow(): Flow<Resource<List<Expense>>> {
@@ -32,7 +56,8 @@ class ExpenseRepository(private val expenseDao: ExpenseDao) {
                     title = entity.title,
                     amount = "$formattedAmount đ",
                     date = entity.date,
-                    category = entity.note
+                    category = entity.note?.ifBlank { null },
+                    type = entity.type
                 )
             }
             Resource.Success(expenses)
@@ -66,7 +91,8 @@ class ExpenseRepository(private val expenseDao: ExpenseDao) {
                             title = expense.title,
                             amount = expense.amount.toDoubleOrNull() ?: 0.0,
                             date = expense.date,
-                            note = expense.category
+                            note = expense.category,
+                            type = expense.type
                         )
                         expenseDao.insertExpense(entity)
                     }

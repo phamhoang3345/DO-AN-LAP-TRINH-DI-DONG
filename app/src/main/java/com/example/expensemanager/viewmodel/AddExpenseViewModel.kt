@@ -38,6 +38,8 @@ class AddExpenseViewModel(application: Application) : AndroidViewModel(applicati
             return
         }
 
+        val cleanNote = category?.trim()?.ifEmpty { null }
+
         _saveResult.value = Resource.Loading
         viewModelScope.launch {
             try {
@@ -47,7 +49,8 @@ class AddExpenseViewModel(application: Application) : AndroidViewModel(applicati
                         title = title,
                         amount = amount,
                         date = date,
-                        note = category
+                        note = cleanNote,
+                        type = "EXPENSE"
                     )
                     repository.addExpense(newExpense)
                     _saveResult.value = Resource.Success("Thêm khoản chi tiêu thành công!")
@@ -58,7 +61,8 @@ class AddExpenseViewModel(application: Application) : AndroidViewModel(applicati
                         title = title,
                         amount = amount,
                         date = date,
-                        note = category
+                        note = cleanNote,
+                        type = "EXPENSE"
                     )
                     repository.updateExpense(updatedExpense)
                     _saveResult.value = Resource.Success("Cập nhật khoản chi tiêu thành công!")
@@ -78,7 +82,8 @@ class AddExpenseViewModel(application: Application) : AndroidViewModel(applicati
                     title = title,
                     amount = amount,
                     date = date,
-                    note = category
+                    note = category?.trim()?.ifEmpty { null },
+                    type = "EXPENSE"
                 )
                 repository.deleteExpense(expenseToDelete)
                 _saveResult.value = Resource.Success("Đã xóa khoản chi tiêu!")

@@ -12,5 +12,7 @@ data class Expense(
     @SerializedName("date")
     val date: String,
     @SerializedName("category")
-    val category: String? = null
+    val category: String? = null,
+    @SerializedName("type")
+    val type: String = "EXPENSE"
 )
