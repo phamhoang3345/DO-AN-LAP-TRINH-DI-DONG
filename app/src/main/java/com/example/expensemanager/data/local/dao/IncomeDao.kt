@@ -10,6 +10,9 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface IncomeDao {
 
+    @Query("SELECT * FROM incomes WHERE userId = :userId ORDER BY id DESC")
+    fun getIncomesForUser(userId: String): Flow<List<IncomeEntity>>
+
     @Query("SELECT * FROM incomes ORDER BY id DESC")
     fun getAllIncomes(): Flow<List<IncomeEntity>>
 

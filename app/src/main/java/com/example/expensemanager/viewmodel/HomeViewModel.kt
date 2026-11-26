@@ -70,15 +70,26 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
     private fun observeOverviewFromRoom() {
         viewModelScope.launch {
-            repository.getOverviewSummaryFlow().collectLatest { summary ->
-                _overviewSummary.value = summary
-                currentTotalExpense = summary.totalExpense
-                _totalExpense.value = "- ${formatCurrency(summary.totalExpense)}"
-                _totalIncome.value = "+ ${formatCurrency(summary.totalIncome)}"
-                sessionManager.saveBalance(summary.balance)
-                _currentBalance.value = formatCurrency(summary.balance)
+            val currentUserId = sessionManager.getUserId()
+            expenseDao.getExpensesForUser(currentUserId).collectLatest { allItems ->
+                val (incomeItems, expenseItems) = allItems.partition { item ->
+                    item.type == "INCOME" || item.title.startsWith("Thu nhập") || (item.note?.contains("Thu nhập") == true)
+                }
 
-                // Cập nhật Tiến độ Ngân sách
+                // 1. Tính tổng chi tiêu
+                currentTotalExpense = expenseItems.sumOf { it.amount }
+                _totalExpense.value = "- ${formatCurrency(currentTotalExpense)}"
+
+                // 2. Tính tổng thu nhập
+                val totalIncomeSum = incomeItems.sumOf { it.amount }
+                _totalIncome.value = "+ ${formatCurrency(totalIncomeSum)}"
+
+                // 3. Tính số dư
+                val calculatedBalance = totalIncomeSum - currentTotalExpense
+                sessionManager.saveBalance(calculatedBalance)
+                _currentBalance.value = formatCurrency(calculatedBalance)
+
+                // 4. Cập nhật Tiến độ Ngân sách
                 updateBudgetCalculation()
             }
         }

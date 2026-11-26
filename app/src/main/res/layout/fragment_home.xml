@@ -1,273 +1,280 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#F7F5F0"
-    android:orientation="vertical"
-    android:padding="16dp">
+    android:fillViewport="true">
 
-    <!-- Thẻ số dư hiện tại -->
-    <androidx.cardview.widget.CardView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="14dp"
-        android:backgroundTint="#FFFFFF"
-        app:cardCornerRadius="16dp"
-        app:cardElevation="3dp">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="20dp">
-
-            <TextView
-                android:id="@+id/tv_balance_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Số dư hiện tại"
-                android:textColor="#666666"
-                android:textSize="14sp" />
-
-            <TextView
-                android:id="@+id/tv_balance_amount"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="2.500.000 đ"
-                android:textColor="#C66A42"
-                android:textSize="28sp"
-                android:textStyle="bold" />
-        </LinearLayout>
-    </androidx.cardview.widget.CardView>
-
-    <!-- Thẻ tóm tắt Thu - Chi trong tháng nằm ngang -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="14dp"
-        android:orientation="horizontal">
+        android:orientation="vertical"
+        android:padding="16dp">
 
-        <!-- Thẻ Tổng Thu Tháng Này (Màu Xanh) -->
+        <!-- Thẻ số dư hiện tại -->
         <androidx.cardview.widget.CardView
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="6dp"
-            android:layout_weight="1"
+            android:layout_marginBottom="14dp"
             android:backgroundTint="#FFFFFF"
-            app:cardCornerRadius="14dp"
-            app:cardElevation="2dp">
+            app:cardCornerRadius="16dp"
+            app:cardElevation="3dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="14dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
-
-                    <!-- Icon Mũi tên vào/thu (Màu xanh) -->
-                    <ImageView
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:layout_marginEnd="6dp"
-                        android:background="@android:drawable/ic_menu_add"
-                        android:backgroundTint="#388E3C"
-                        android:contentDescription="Icon Thu" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Tổng thu tháng"
-                        android:textColor="#666666"
-                        android:textSize="12sp" />
-                </LinearLayout>
+                android:padding="20dp">
 
                 <TextView
-                    android:id="@+id/tv_total_income"
+                    android:id="@+id/tv_balance_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Số dư hiện tại"
+                    android:textColor="#666666"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/tv_balance_amount"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:text="+ 5.000.000 đ"
-                    android:textColor="#388E3C"
-                    android:textSize="16sp"
+                    android:text="2.500.000 đ"
+                    android:textColor="#C66A42"
+                    android:textSize="28sp"
                     android:textStyle="bold" />
-
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
-        <!-- Thẻ Tổng Chi Tháng Này (Màu Đỏ) -->
-        <androidx.cardview.widget.CardView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="6dp"
-            android:layout_weight="1"
-            android:backgroundTint="#FFFFFF"
-            app:cardCornerRadius="14dp"
-            app:cardElevation="2dp">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="14dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
-
-                    <!-- Icon Mũi tên ra/chi (Màu đỏ) -->
-                    <ImageView
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:layout_marginEnd="6dp"
-                        android:background="@android:drawable/ic_delete"
-                        android:backgroundTint="#D32F2F"
-                        android:contentDescription="Icon Chi" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Tổng chi tháng"
-                        android:textColor="#666666"
-                        android:textSize="12sp" />
-                </LinearLayout>
-
-                <TextView
-                    android:id="@+id/tv_total_expense"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:text="- 0 đ"
-                    android:textColor="#D32F2F"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
-
-            </LinearLayout>
-        </androidx.cardview.widget.CardView>
-
-    </LinearLayout>
-
-    <!-- Thẻ Tiến độ ngân sách / Hạn mức chi tiêu -->
-    <androidx.cardview.widget.CardView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:backgroundTint="#FFFFFF"
-        app:cardCornerRadius="14dp"
-        app:cardElevation="2dp">
-
+        <!-- Thẻ tóm tắt Thu - Chi trong tháng nằm ngang -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="16dp">
+            android:layout_marginBottom="14dp"
+            android:orientation="horizontal">
 
-            <!-- Tiêu đề + Nút Đổi hạn mức -->
-            <RelativeLayout
+            <!-- Thẻ Tổng Thu Tháng Này (Màu Xanh) -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="6dp"
+                android:layout_weight="1"
+                android:backgroundTint="#FFFFFF"
+                app:cardCornerRadius="14dp"
+                app:cardElevation="2dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="14dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <!-- Icon Mũi tên vào/thu (Màu xanh) -->
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_marginEnd="6dp"
+                            android:background="@android:drawable/ic_menu_add"
+                            android:backgroundTint="#388E3C"
+                            android:contentDescription="Icon Thu" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Tổng thu tháng"
+                            android:textColor="#666666"
+                            android:textSize="12sp" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/tv_total_income"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="+ 5.000.000 đ"
+                        android:textColor="#388E3C"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Thẻ Tổng Chi Tháng Này (Màu Đỏ) -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="6dp"
+                android:layout_weight="1"
+                android:backgroundTint="#FFFFFF"
+                app:cardCornerRadius="14dp"
+                app:cardElevation="2dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="14dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <!-- Icon Mũi tên ra/chi (Màu đỏ) -->
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_marginEnd="6dp"
+                            android:background="@android:drawable/ic_delete"
+                            android:backgroundTint="#D32F2F"
+                            android:contentDescription="Icon Chi" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Tổng chi tháng"
+                            android:textColor="#666666"
+                            android:textSize="12sp" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/tv_total_expense"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="- 0 đ"
+                        android:textColor="#D32F2F"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+        </LinearLayout>
+
+        <!-- Thẻ Tiến độ ngân sách / Hạn mức chi tiêu -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:backgroundTint="#FFFFFF"
+            app:cardCornerRadius="14dp"
+            app:cardElevation="2dp">
+
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
 
+                <!-- Tiêu đề + Nút Đổi hạn mức -->
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/tv_budget_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentStart="true"
+                        android:text="📊 Hạn mức chi tiêu tháng"
+                        android:textColor="#263B32"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/btn_edit_budget"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:background="?attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:text="✏️ Thiết lập"
+                        android:textColor="#263B32"
+                        android:textSize="12sp"
+                        android:textStyle="bold" />
+                </RelativeLayout>
+
+                <!-- Chi tiết số tiền chi tiêu / hạn mức (Ví dụ: Đã tiêu 1.500.000 đ / 3.000.000 đ - 50%) -->
                 <TextView
-                    android:id="@+id/tv_budget_title"
+                    android:id="@+id/tv_budget_detail"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentStart="true"
-                    android:text="📊 Hạn mức chi tiêu tháng"
-                    android:textColor="#263B32"
-                    android:textSize="14sp"
-                    android:textStyle="bold" />
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:text="Đã tiêu 0 đ / 3.000.000 đ (0%)"
+                    android:textColor="#666666"
+                    android:textSize="13sp" />
 
+                <!-- Thanh tiến trình ProgressBar -->
+                <ProgressBar
+                    android:id="@+id/progress_budget"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="12dp"
+                    android:max="100"
+                    android:progress="0"
+                    android:progressDrawable="@android:drawable/progress_horizontal" />
+
+                <!-- Cảnh báo khi vượt 80% hoặc 100% -->
                 <TextView
-                    android:id="@+id/btn_edit_budget"
+                    android:id="@+id/tv_budget_warning"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:background="?attr/selectableItemBackground"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:text="✏️ Thiết lập"
-                    android:textColor="#263B32"
+                    android:layout_marginTop="8dp"
+                    android:text="⚠️ Cảnh báo: Chi tiêu đã vượt 80% hạn mức!"
+                    android:textColor="#F57C00"
                     android:textSize="12sp"
-                    android:textStyle="bold" />
-            </RelativeLayout>
+                    android:textStyle="bold"
+                    android:visibility="gone" />
 
-            <!-- Chi tiết số tiền chi tiêu / hạn mức (Ví dụ: Đã tiêu 1.500.000 đ / 3.000.000 đ - 50%) -->
-            <TextView
-                android:id="@+id/tv_budget_detail"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"
-                android:text="Đã tiêu 0 đ / 3.000.000 đ (0%)"
-                android:textColor="#666666"
-                android:textSize="13sp" />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
 
-            <!-- Thanh tiến trình ProgressBar -->
-            <ProgressBar
-                android:id="@+id/progress_budget"
-                style="?android:attr/progressBarStyleHorizontal"
-                android:layout_width="match_parent"
-                android:layout_height="12dp"
-                android:max="100"
-                android:progress="0"
-                android:progressDrawable="@android:drawable/progress_horizontal" />
+        <!-- Hai nút tương tác Thêm thu / Thêm chi -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
-            <!-- Cảnh báo khi vượt 80% hoặc 100% -->
-            <TextView
-                android:id="@+id/tv_budget_warning"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="⚠️ Cảnh báo: Chi tiêu đã vượt 80% hạn mức!"
-                android:textColor="#F57C00"
-                android:textSize="12sp"
+            <!-- Nút + THÊM THU -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_add_income"
+                android:layout_width="0dp"
+                android:layout_height="54dp"
+                android:layout_marginEnd="6dp"
+                android:layout_weight="1"
+                android:text="+ THÊM THU"
+                android:textSize="14sp"
                 android:textStyle="bold"
-                android:visibility="gone" />
+                app:backgroundTint="#263B32"
+                app:cornerRadius="12dp" />
+
+            <!-- Nút - THÊM CHI -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_add_expense"
+                android:layout_width="0dp"
+                android:layout_height="54dp"
+                android:layout_marginStart="6dp"
+                android:layout_weight="1"
+                android:text="- THÊM CHI"
+                android:textColor="#FFFFFF"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                app:backgroundTint="#C66A42"
+                app:cornerRadius="12dp" />
 
         </LinearLayout>
-    </androidx.cardview.widget.CardView>
-
-    <!-- Hai nút tương tác Thêm thu / Thêm chi -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <!-- Nút + THÊM THU -->
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_add_income"
-            android:layout_width="0dp"
-            android:layout_height="54dp"
-            android:layout_marginEnd="6dp"
-            android:layout_weight="1"
-            android:text="+ THÊM THU"
-            android:textSize="14sp"
-            android:textStyle="bold"
-            app:backgroundTint="#263B32"
-            app:cornerRadius="12dp" />
-
-        <!-- Nút - THÊM CHI -->
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_add_expense"
-            android:layout_width="0dp"
-            android:layout_height="54dp"
-            android:layout_marginStart="6dp"
-            android:layout_weight="1"
-            android:text="- THÊM CHI"
-            android:textColor="#FFFFFF"
-            android:textSize="14sp"
-            android:textStyle="bold"
-            app:backgroundTint="#C66A42"
-            app:cornerRadius="12dp" />
 
     </LinearLayout>
 
-</LinearLayout>
+</androidx.core.widget.NestedScrollView>

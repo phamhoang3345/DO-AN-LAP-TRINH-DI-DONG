@@ -7,6 +7,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.expensemanager.data.local.AppDatabase
+import com.example.expensemanager.data.local.SessionManager
 import com.example.expensemanager.data.local.entity.ExpenseEntity
 import com.example.expensemanager.model.BarGroupData
 import com.example.expensemanager.model.CategoryStat
@@ -35,6 +36,7 @@ class StatsViewModel(application: Application) : AndroidViewModel(application) {
     private val db = AppDatabase.getDatabase(application)
     private val expenseDao = db.expenseDao()
     private val categoryDao = db.categoryDao()
+    private val sessionManager = SessionManager(application)
 
     private val _currentPeriod = MutableLiveData(PeriodFilter.THIS_MONTH)
     val currentPeriod: LiveData<PeriodFilter> get() = _currentPeriod
@@ -84,8 +86,9 @@ class StatsViewModel(application: Application) : AndroidViewModel(application) {
     private fun observeData() {
         viewModelScope.launch {
             _isLoading.value = true
+            val currentUserId = sessionManager.getUserId()
             combine(
-                expenseDao.getAllExpenses(),
+                expenseDao.getExpensesForUser(currentUserId),
                 categoryDao.getAllCategories(),
             ) { expenses, categories ->
                 Pair(expenses, categories)
@@ -199,7 +202,7 @@ class StatsViewModel(application: Application) : AndroidViewModel(application) {
                 for ((year, month) in monthList) {
                     val itemsInMonth = allExpensesList.filter { isSameMonthYear(it.date, year, month) }
                     val (incList, expList) = itemsInMonth.partition {
-                        it.type == "INCOME" || it.title.startsWith("Thu nhập") || (it.note?.contains("Thu nhập") == true)
+                        it.type == "INCOME" || it.title.startsWith("Thu nhập") || (itemNoteIsIncome(it.note))
                     }
                     val inc = incList.sumOf { it.amount }
                     val exp = expList.sumOf { it.amount }
@@ -233,7 +236,7 @@ class StatsViewModel(application: Application) : AndroidViewModel(application) {
 
                     val itemsOnDay = allExpensesList.filter { isSameDate(it.date, y, m, d) }
                     val (incList, expList) = itemsOnDay.partition {
-                        it.type == "INCOME" || it.title.startsWith("Thu nhập") || (it.note?.contains("Thu nhập") == true)
+                        it.type == "INCOME" || it.title.startsWith("Thu nhập") || (itemNoteIsIncome(it.note))
                     }
                     val inc = incList.sumOf { it.amount }
                     val exp = expList.sumOf { it.amount }
@@ -258,7 +261,7 @@ class StatsViewModel(application: Application) : AndroidViewModel(application) {
                 for (year in (currentYear - 2)..currentYear) {
                     val itemsInYear = allExpensesList.filter { getYearFromDate(it.date) == year }
                     val (incList, expList) = itemsInYear.partition {
-                        it.type == "INCOME" || it.title.startsWith("Thu nhập") || (it.note?.contains("Thu nhập") == true)
+                        it.type == "INCOME" || it.title.startsWith("Thu nhập") || (itemNoteIsIncome(it.note))
                     }
                     val inc = incList.sumOf { it.amount }
                     val exp = expList.sumOf { it.amount }
@@ -277,6 +280,10 @@ class StatsViewModel(application: Application) : AndroidViewModel(application) {
         }
 
         _barChartData.value = result
+    }
+
+    private fun itemNoteIsIncome(note: String?): Boolean {
+        return note?.contains("Thu nhập") == true
     }
 
     private fun isSameMonthYear(dateStr: String, targetYear: Int, targetMonth: Int): Boolean {

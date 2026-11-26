@@ -23,27 +23,9 @@ class ExpenseRepository(
 
     private val numberFormatter = NumberFormat.getInstance(Locale.GERMANY)
 
-    // Lấy luồng số liệu Tổng quan (Tổng Thu, Tổng Chi, Số Dư)
-    fun getOverviewSummaryFlow(): Flow<OverviewSummary> {
-        val incomeFlow: Flow<Double> = if (incomeDao != null) {
-            combine(incomeDao.getTotalIncome(), expenseDao.getTotalIncomeFromExpenses()) { inc1, inc2 ->
-                maxOf(inc1, inc2)
-            }
-        } else {
-            expenseDao.getTotalIncomeFromExpenses()
-        }
-
-        return combine(incomeFlow, expenseDao.getTotalExpense()) { income, expense ->
-            OverviewSummary(
-                totalIncome = income,
-                totalExpense = expense
-            )
-        }
-    }
-
-    // Lấy dữ liệu dạng Flow từ Local DB (Room) để ViewModel observe
-    fun getExpensesFlow(): Flow<Resource<List<Expense>>> {
-        return expenseDao.getAllExpenses().map { entities ->
+    // Lấy dữ liệu dạng Flow từ Local DB (Room) cho đúng User ID
+    fun getExpensesFlow(userId: String): Flow<Resource<List<Expense>>> {
+        return expenseDao.getExpensesForUser(userId).map { entities ->
             val expenses = entities.map { entity ->
                 val formattedAmount = try {
                     numberFormatter.format(entity.amount.toLong())
@@ -79,8 +61,8 @@ class ExpenseRepository(
         expenseDao.deleteExpense(expense)
     }
 
-    // Hàm đồng bộ dữ liệu từ API về Local DB
-    suspend fun syncExpensesFromApi() = withContext(Dispatchers.IO) {
+    // Hàm đồng bộ dữ liệu từ API về Local DB cho đúng User ID
+    suspend fun syncExpensesFromApi(userId: String) = withContext(Dispatchers.IO) {
         try {
             val response = ApiClient.apiService.getExpenses()
             if (response.isSuccessful) {
@@ -92,7 +74,8 @@ class ExpenseRepository(
                             amount = expense.amount.toDoubleOrNull() ?: 0.0,
                             date = expense.date,
                             note = expense.category,
-                            type = expense.type
+                            type = expense.type,
+                            userId = userId
                         )
                         expenseDao.insertExpense(entity)
                     }
